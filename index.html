@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Tourney:wght@200&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap" rel="stylesheet">
+		<meta charset="utf-8">
+		<title>Slime50</title>
+		<style>
+			body {background-color:#ececec; font-size:15px; font-family:'Source Code Pro', monospace; text-align:left; }
+			.jumbotron {
+    			background-color: #cfcfcf;
+				color: rgb(0, 0, 0);
+				margin-bottom: 1rem;
+				padding: 1rem 1rem;
+				text-align: left;
+				border-style: solid;
+				border-width: 3px;
+				box-shadow: -2px 2px 2px rgb(117, 117, 117);
+			}
+			input[type=range] {
+				width:230px; 
+				height:20px; 
+				padding:0px;
+			}
+			.slider {
+				-webkit-appearance: none;  
+				appearance: none;
+				width: 100%; 
+				height: 25px; 
+				background: #ffffff; 
+				outline: none; 
+				opacity: 0.7; 
+				-webkit-transition: .2s; 
+				transition: opacity .2s;
+			}
+			.slider:hover {
+				opacity: 1; 
+			}
+			.slider::-webkit-slider-thumb {
+				-webkit-appearance: none; 
+				appearance: none;
+				width: 20px; 
+				height: 20px; 
+				background: #ff7b00; 
+				cursor: pointer; 
+			}
+			.custombutton {		
+				display: inline-block; 
+				margin:5px;
+				width:110px; 
+				height:40px; 
+				line-height:28px; 
+				font-size:15px; 
+				opacity: 0.7;
+				font-family:'Source Code Pro', monospace; 
+				text-align:center;
+				color:black; 
+				background:-webkit-linear-gradient(white,#b3ff00,#b3ff00,#b3ff00);
+				background:#ff7b00;
+				text-decoration:none;  
+				border:1px solid rgb(0, 0, 0); 
+				-webkit-user-select: none;
+				-moz-user-select: -moz-none;
+				-webkit-user-select: none;
+				-ms-user-select: none;
+				user-select: none;
+				cursor: pointer;
+				-webkit-tap-highlight-color: rgba(0,0,0,0);
+			}
+			.custombutton:hover {
+				opacity: 1;
+			}
+			.tooltip {
+				position: relative;
+				display: inline-block;
+				border-bottom: 1px dotted black; 
+			}
+			.tooltip .tooltiptext {
+				visibility: hidden;
+				width: 120px;
+				background-color: rgb(255, 201, 129);
+				color: rgb(0, 0, 0);
+				text-align: center;
+				padding: 5px 0;
+				border-radius: 2px;
+				bottom: 100%;
+				left: 50%;
+				margin-left: -60px;
+			}
+			.tooltip:hover .tooltiptext {
+				visibility: visible;
+			}
+			.checkmark {
+				cursor: pointer;
+				top: 0;
+				left: 0;
+				height: 20px;
+				width: 20px;
+				border-radius: 0px;
+			}				
+		</style>
+	</head>
+
+	<body>		
+		<div class="jumbotron">
+			<h1 style=" text-align:center; font-family: 'Tourney', cursive; font-size:50px; padding: 2px; margin: 2px;">Slime50</h1>
+		</div>
+		<div id="mainDiv" style="width:880px; margin-left:auto; margin-right:auto; margin-bottom: 10px;">
+		<div id="appDiv" style="padding: 5px; height:600px; background-color:#d0d0d0; border: 3px solid #000000; box-shadow: -2px 2px 2px rgb(117, 117, 117);" >
+			<div id="controlPanel" style="float:right; width:250px; margin-left:0px; text-align:center;">
+				<div>
+					<input id="startButton" class="custombutton" type="button" value="Start" onclick="startStop();">
+					<input id="ResetButton" class="custombutton" type="button" value="Reset" onclick="reset();">
+				</div>
+				<div style="margin-top:5px; text-align:left;">
+					Number of particles: <span id="nReadout">2000</span>
+					<input id="nSlider" class="slider" type="range" min="1" max="10000" value="2000" oninput="changeN()" onchange="changeN()">
+				</div>
+				<div style="margin-top:5px; text-align:left;">
+					Simulation speed: <span id="simSpeedReadout">Max</span>
+					<input id="simSpeedSlider" class="slider" type="range" min="1" max="10" value="10" oninput="updateSimSpeed()" onchange="updateSimSpeed()">
+				</div>
+				<div style="margin-top:5px; text-align:left;">
+					Number of species: 
+					<select id="speciesSelect" onchange="speciesChange()">
+						<option value="1" selected>1</option>
+						<option value="2">2</option>
+						<option value="3">3</option>
+					</select>
+				</div>
+				<div style="margin-top:10px; text-align:left;">
+					Initiation mode:
+					<select id="initMode" onchange="reset()">
+						<option value="circle" selected>circle</option>
+						<option value="smallcircle">small circle</option>
+						<option value="center">center</option>
+						<option value="random">random</option>
+						<option value="ring">ring</option>
+					</select>
+				</div>					
+				<div style="margin-top:10px; text-align:left;">
+					Background color: 
+					<input type="color" id="bgColorSelect" onchange="changeBg()"
+							value="#ffffff" style="float: right;">
+				</div>
+				<div style="margin-top:10px; text-align:left;">
+					Particle color: 
+					<input type="color" id="particleColorSelect" onchange="updateParticleColor()"
+							value="#ff0000" style="float: right;">	
+					<input type="checkbox" class="checkmark" id="showParticle" value="show" style="float: right;">
+				</div>		
+				<div style="margin-top:10px; text-align:left;">
+					Trail color: 
+					<input type="color" id="trailColorSelect" onchange="updateTrailColor()"
+					value="#000000" style="float: right;">	
+					<input type="checkbox" class="checkmark" id="showTrail" value="show" checked="true" style="float: right;">
+				</div>	
+				<div style="margin-top:10px; text-align:left;">
+					Velocity: <span id="velocityReadout">1</span> pixels/step
+					<input id="velocitySlider" class="slider" type="range" min="0.1" max="3" value="1" step="0.1" oninput="updateVelocity()" onchange="updateVelocity()">
+				</div>			
+				<div style="margin-top:5px; text-align:left;">
+					Turn angle: <span id="turnReadout">45</span>°
+					<input id="turnSlider" class="slider" type="range" min="0" max="90" value="45" oninput="updateTurn()" onchange="updateTurn()">
+				</div>
+				<div style="margin-top:5px; text-align:left;">
+					Random turn angle: <span id="turnRandomReadout">10</span>°
+					<input id="turnRandomSlider" class="slider" type="range" min="0" max="90" value="10" oninput="updateRandomTurn()" onchange="updateRandomTurn()">
+				</div>
+				<div style="margin-top:5px; text-align:left;">
+					Scan angle: <span id="scanAngleReadout">45</span>°
+					<input id="scanAngleSlider" class="slider" type="range" min="0" max="90" value="45" oninput="updateScanAngle()" onchange="updateScanAngle()">
+				</div>
+				<div style="margin-top:5px; text-align:left;">
+					Scan distance: <span id="scanLengthReadout">9</span> pixels
+					<input id="scanLengthSlider" class="slider" type="range" min="1" max="50" value="9" oninput="updateScanDistance()" onchange="updateScanDistance()">
+				</div>
+				<div style="margin-top:5px; text-align:left;">
+					Scan size: <span id="scanSizeReadout">2</span> pixels
+					<input id="scanSizeSlider" class="slider" type="range" min="1" max="10" value="2" oninput="updateScanSize()" onchange="updateScanSize()">
+				</div>
+			</div>
+			<div style="float:left; width:600px; margin-left:auto; margin-right:auto;">
+				<canvas id="c_Bg" width="600" height="600"  style="position: absolute;">
+				Canvas not supported; please update your browser.
+				</canvas>
+				<canvas id="c_trail" width="600" height="600"  style="position: absolute;">
+				Canvas not supported; please update your browser.
+				</canvas>
+				<canvas id="c" width="600" height="600"  style="position: absolute;">
+				Canvas not supported; please update your browser.
+				</canvas>				
+			</div>
+		</div>
+        <div id="textdiv">
+            <p><b>Introduction</b></p>
+            <p>
+                This webapp was created to simulate the motion of a slime mould in a 2d space. I was
+                inspired by a video by Sebastian Lague :<a href="https://www.youtube.com/watch?v=X-iSQQgOd1A">Coding Adventure: Ant and Slime Simulations</a>,
+                which was itself, inspired by this paper: <a href="https://uwe-repository.worktribe.com/output/980579">Characteristics of physarum transport networks</a>.
+                <br><br>
+                I found the website, <a href="https://physics.weber.edu/schroeder/html5/">Creating Interactive Web Simulations Using HTML5 and JavaScript</a>, very helpful for creating this project.
+                <br><br>
+                This project was created with the intention of submitting it as my final project for <a href="https://cs50.harvard.edu/x/2021/">CS50x</a>. 
+            </p>
+            <p><b>Particle behavior</b></p>
+            <ul>
+                <li>All particles have equal velocity and do not collide with eachother.</li>
+                <br>
+                <li>Particles leave a trail at their current location, which fades gradually.</li> 
+                <br>
+                <li>Each particle measures the "strength" of trail to the left and right of it's current position, and will turn towards the position of the stronger trail by an angle of <b>"Turn angle"</b>.
+                    The exact locations the particles sense relative to their position can be controlled by parameters <b>"Scan angle"</b>,<b>"Scan distance"</b>, and <b>"Scan size"</b>. </li>
+                <br>    
+                <li>If more than one species are present, a particle of a given species will be attracted to trails of its own species, and will be repelled by trails of other species.</li>
+                <br>
+                <li>Particles can also turn randomly every timestep, by an angle of +/- <b>"Random turn angle"</b>.</li>
+                <br>
+            </p>
+                
+        </div>
+		</div>
+		<div class="jumbotron">
+			<h1 style="font-family:'Source Code Pro', monospace; font-size:16px; padding: 1px; margin: 1px; text-align: center;">Contact: rupert.j.watson@googlemail.com</h1>
+		</div>
+		
+		<script>
+                        //Get variables
+            var canvas = document.getElementById("c");
+            var context = canvas.getContext("2d");
+            var canvasTrail = document.getElementById("c_trail");
+            var contextTrail = canvasTrail.getContext("2d");
+            var canvasBg = document.getElementById("c_Bg");
+            var contextBg = canvasBg.getContext("2d");
+            var bgColorSelect = document.getElementById('bgColorSelect');
+            var nSlider = document.getElementById('nSlider');
+            var startButton = document.getElementById('startButton');
+            var resetButton = document.getElementById('resetButton');
+            var speciesSelect = document.getElementById('speciesSelect');
+            var initMode = document.getElementById('initMode');
+            var turnSlider = document.getElementById('turnSlider');
+            var turnRandomSlider = document.getElementById('turnRandomSlider');
+            var scanAngleSlider = document.getElementById('scanAngleSlider');
+            var scanLengthSlider = document.getElementById('scanLengthSlider');
+            var scanSizeSlider = document.getElementById('scanSizeSlider');
+            var trailColorSelect = document.getElementById('trailColorSelect');
+            var showTrail = document.getElementById('showTrail');
+            var particleColorSelect = document.getElementById('particleColorSelect');
+            var showParticle = document.getElementById('showParticle');
+            var simSpeedSlider = document.getElementById('simSpeedSlider');
+            var velocitySlider = document.getElementById('velocitySlider');
+
+            var timestep = Math.round(50 + ((Number(simSpeedSlider.value) - 1)*((1-50)/(10-1)))); 
+            var running = false;
+            var widthParticle = 2;
+            var numberSpecies = Number(speciesSelect.value);
+            var nMax = Number(nSlider.max);				
+            var N = Number(nSlider.value);									
+            var stepsPerFrame = 1;     
+            var colorParticle = "red";
+            var colorTrailG = "rgb(0, 225, 0)"; 
+            var colorTrailR = "rgb(255, 0, 0)"; 
+            var colorTrailB = "rgb(0, 0, 255)";
+            var trailSize = 1;
+            var colorTrailCustom = trailColorSelect.value;
+            var theta = 0, r = 0;
+
+            //Controller variables
+            var velocity = Number(velocitySlider.value);
+            var scanSize = Number(scanSizeSlider.value);         
+            var scanAngle = (Math.PI / 180) * Number(scanAngleSlider.value);         
+            var scanLength = Number(scanLengthSlider.value);
+            var randomTurn = 2 * (Math.PI / 180) * Number(turnRandomSlider.value);
+            var senseTurn = (Math.PI / 180) * Number(turnSlider.value);  
+
+            var  x = new Array(nMax),  y = new Array(nMax);
+            //var vx = new Array(nMax), vy = new Array(nMax);
+            var direction = new Array(nMax);
+
+            // Function to set starting particle parameters
+            function initialiseStates(){
+                for (var i=0; i<nMax; i++) {
+                    if (initMode.value == 'random') {
+                        x[i] = Math.random() * canvas.width;  
+                        y[i] = Math.random() * canvas.height;
+                    } else if (initMode.value == 'center'){
+                        x[i] = canvas.width / 2; 
+                        y[i] = canvas.height / 2;
+                    } else if (initMode.value == 'circle'){
+                        theta = Math.random() * 2 * Math.PI;
+                        r = Math.sqrt(Math.random());
+                        x[i] = (canvas.width / 2) + ((canvas.width / 2) * r * Math.sin( theta )); 
+                        y[i] = (canvas.height / 2) + ((canvas.height / 2) * r * Math.cos( theta ));
+                    } else if (initMode.value == 'smallcircle'){
+                        theta = Math.random() * 2 * Math.PI;
+                        r = Math.sqrt(Math.random());
+                        x[i] = (canvas.width / 2) + ((canvas.width / 4) * r * Math.sin( theta )); 
+                        y[i] = (canvas.height / 2) + ((canvas.height / 4) * r * Math.cos( theta ));
+                    } else if (initMode.value == 'ring'){
+                        theta = Math.random() * 2 * Math.PI;
+                        x[i] = (canvas.width / 2) + ((canvas.width / 3)* Math.sin( theta )); 
+                        y[i] = (canvas.height / 2) + ((canvas.height / 3) * Math.cos( theta ));
+                    } 
+                    direction[i] = Math.random()*2*Math.PI; 
+                }
+                paintCanvas()
+            }
+            initialiseStates()
+            changeBg () 
+
+            function simulate() {
+                moveSlime()
+                if (running){
+                    window.setTimeout(simulate, timestep);
+                    step =+ 1;
+                }
+            }
+
+            function moveSlime() {
+                for (var step=0; step<stepsPerFrame; step++) {
+                    for (var i=0; i<N; i++) {
+                        // Check for bounces on border walls
+                        if ((x[i] < (velocity * widthParticle / 2)) || (x[i] > (canvas.width - velocity * (widthParticle / 2)))) {
+                            direction[i] = -direction[i];
+                        }
+                        if ((y[i] < (velocity * widthParticle / 2)) || (y[i] > (canvas.width - velocity * (widthParticle / 2)))) {
+                            direction[i] = -direction[i] + Math.PI;
+                        }        
+                        // Sense for trail to L and R For a trail         
+                        var signalStrengthL = 0;
+                        var signalStrengthR = 0;
+                        var imageDataR = contextTrail.getImageData(x[i] + Math.sin(direction[i] + scanAngle)*scanLength - scanSize/2 , y[i] + Math.cos(direction[i] + scanAngle)*scanLength - scanSize/2, scanSize, scanSize);
+                        var imageDataL = contextTrail.getImageData(x[i] + Math.sin(direction[i] - scanAngle)*scanLength - scanSize/2 , y[i] + Math.cos(direction[i] - scanAngle)*scanLength - scanSize/2, scanSize, scanSize);
+                        var dataL = imageDataL.data;
+                        var dataR = imageDataR.data;
+                        for (var j = 0; j < dataR.length; j += 4) {
+                            if (numberSpecies == 3) {
+                                if (i % 3 == 0) {
+                                    signalStrengthR += dataR[j] - dataR[j + 1] - dataR[j + 2] + dataR[j + 3];
+                                    signalStrengthL += dataL[j] - dataL[j + 1] - dataL[j + 2] + dataL[j + 3];   
+                                }
+                                else if (i % 3 == 1) {
+                                    signalStrengthR += -dataR[j] + dataR[j + 1] - dataR[j + 2] + dataR[j + 3];
+                                    signalStrengthL += -dataL[j] + dataL[j + 1] - dataL[j + 2] + dataL[j + 3];
+                                }
+                                else{
+                                    signalStrengthR += -dataR[j] - dataR[j + 1] + dataR[j + 2] + dataR[j + 3];
+                                    signalStrengthL += -dataL[j] - dataL[j + 1] + dataL[j + 2] + dataL[j + 3];
+                                }                    
+                            }
+                            else if (numberSpecies == 2) {
+                                if (i % 2 == 0) {
+                                    signalStrengthR += dataR[j] - dataR[j + 1] + dataR[j + 2] + dataR[j + 3];
+                                    signalStrengthL += dataL[j] - dataL[j + 1] + dataL[j + 2] + dataL[j + 3];
+                                }
+                                else{
+                                    signalStrengthR += -dataR[j] + dataR[j + 1] + dataR[j + 2] + dataR[j + 3];
+                                    signalStrengthL += -dataL[j] + dataL[j + 1] + dataL[j + 2] + dataL[j + 3];
+                                }
+                            } 
+                            else {  
+                                signalStrengthR += dataR[j] + dataR[j + 1] + dataR[j + 2] + dataR[j + 3];
+                                signalStrengthL += dataL[j] + dataL[j + 1] + dataL[j + 2] + dataL[j + 3];
+                            }
+                        } 
+                        //Turn towards stronger signal
+                        if (signalStrengthL > signalStrengthR) {
+                            direction[i] += -senseTurn;
+                        }
+                        else if (signalStrengthR > signalStrengthL) {
+                            direction[i] += senseTurn;
+                        }
+                        // Change direction randomly
+                        direction[i] += Math.random() * randomTurn - (randomTurn / 2);          
+                        //Calculate new position
+                        x[i] = x[i] + velocity * Math.sin(direction[i]);
+                        y[i] = y[i] + velocity * Math.cos(direction[i]);
+                    }        
+                }
+                paintCanvas()
+            }
+
+            function paintCanvas() {
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                for (var i=0; i<N; i++) {
+                    // Paint Particles
+                    if (showParticle.checked == true) {
+                        context.beginPath();
+                        context.arc(x[i], y[i], widthParticle/2, 0, 2*Math.PI);
+                        context.fillStyle = colorParticle;
+                        context.fill();
+                    }
+                    // Paint Trail 
+                    if (showTrail.checked == true) {
+                        if (numberSpecies == 3) {
+                            if ((i % 3) == 0){
+                                contextTrail.fillStyle = colorTrailR;    
+                            } else if ((i % 3) == 1) {
+                                contextTrail.fillStyle = colorTrailG;
+                            } else {
+                                contextTrail.fillStyle = colorTrailB;
+                            }
+                        } else if (numberSpecies == 2) {
+                            if ((i % 2) == 0){
+                                contextTrail.fillStyle = colorTrailR;    
+                            } else {
+                                contextTrail.fillStyle = colorTrailG;
+                            }   
+                        } else {
+                            contextTrail.fillStyle = colorTrailCustom;
+                        }
+                        contextTrail.fillRect(x[i] - trailSize/2, y[i] - trailSize/2, trailSize, trailSize); 
+                    }
+                }
+                Trailfade()
+            }
+
+            function Trailfade(){
+                const imageData = contextTrail.getImageData(0, 0, canvas.width, canvas.height);
+                const data = imageData.data;
+                for (var i = 0; i < data.length; i += 4) {
+                    data[i + 3] -= 1; // alpha channel
+                }
+                contextTrail.putImageData(imageData, 0, 0);
+            }
+
+            //----------------------------BUTTONS----------------------------//
+            // Function to start or pause the simulation:
+            function startStop() {
+                running = !running;
+                if (running) {
+                    startButton.value = "Pause";
+                    simulate();
+                }else {
+                    startButton.value = "Resume";
+                }
+            }
+            // Function to reset simulation
+            function reset() {
+                if (running){
+                    running = !running
+                }
+                startButton.value = "Start";
+                contextTrail.clearRect(0, 0, canvas.width, canvas.height);
+                initialiseStates()  
+                paintCanvas()
+            }
+            // Color background 
+            function changeBg() {
+                contextBg.fillStyle = bgColorSelect.value;
+                contextBg.fillRect(0, 0, canvas.width, canvas.height);
+            }
+            function updateTrailColor() {
+                colorTrailCustom = trailColorSelect.value;
+            }
+            function updateParticleColor() {
+                colorParticle = particleColorSelect.value;
+            }
+            //Function to change number of particles
+            function changeN(){
+                var newN = Number(nSlider.value);
+                N = newN;
+                paintCanvas();
+                nReadout.innerHTML = nSlider.value;
+            }
+            function updateSimSpeed() {
+                timestep = Math.round(50 + ((Number(simSpeedSlider.value) - 1)*((1-50)/(10-1)))); 
+                if (simSpeedSlider.value == simSpeedSlider.max) {
+                    simSpeedReadout.innerHTML = "Max";
+                } else {
+                    simSpeedReadout.innerHTML = simSpeedSlider.value;
+                }
+            }
+            // Function to change number of unique species
+            function speciesChange() {    
+                numberSpecies = Number(speciesSelect.value);
+                paintCanvas();
+            }
+            function updateRandomTurn() {
+                randomTurn = 2 * (Math.PI / 180) * Number(turnRandomSlider.value);
+                turnRandomReadout.innerHTML = turnRandomSlider.value;
+            }
+            function updateTurn() {
+                senseTurn = (Math.PI / 180) * Number(turnSlider.value);
+                turnReadout.innerHTML = turnSlider.value;
+            }
+            function updateScanAngle() {
+                scanAngle = (Math.PI / 180) * Number(scanAngleSlider.value); 
+                scanAngleReadout.innerHTML = scanAngleSlider.value;
+            }
+            function updateScanDistance() {
+                scanLength = Number(scanLengthSlider.value);
+                scanLengthReadout.innerHTML = scanLengthSlider.value;
+            }
+            function updateScanSize() {
+                scanSize = Number(scanSizeSlider.value);
+                scanSizeReadout.innerHTML = scanSizeSlider.value;
+            }
+            function updateVelocity() {
+                velocity = Number(velocitySlider.value);
+                velocityReadout.innerHTML = velocitySlider.value;
+            }
+        </script>
+	</body>
+</html>
