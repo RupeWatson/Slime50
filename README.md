@@ -35,7 +35,7 @@ I also used the "getImageData" method to control the behavior of the particles. 
                                 signalStrengthL += dataL[j] + dataL[j + 1] + dataL[j + 2] + dataL[j + 3];
 ```
 
-Another challenge involved adding multiple species of slime. At first, I considered making a seperate array of new particles, and duplicating code in order to handle the new species. However, I realised a simpler way was to use a modulo operator to ensure there were always equal particles of each species. I then modified the behavior to turn towards particles of its own species, and away from those of others. This meant that I could not change the colors of the trails with more than one species present.
+Another challenge involved adding multiple species of slime. At first, I considered making a seperate array of new particles, and duplicating code in order to handle the new species. However, I realised a simpler way was to use a modulo operator to ensure there were always equal particles of each species. I then modified the behavior to turn towards particles of its own color, and away from those of other colors. This meant that I could not change the colors of the trails with more than one species present.
 
 ```
                             else if (numberSpecies == 2) {
