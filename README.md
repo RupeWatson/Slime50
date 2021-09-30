@@ -1,7 +1,7 @@
 # Slime50
 #### Video Demo:  https://www.youtube.com/watch?v=jTOeH1Tb81U
 #### Introduction
-My project is a web application which can be accessed here: https://rupewatson.github.io/Slime50/.
+My project is a web application which can be accessed here: https://rururupert.github.io/Slime50/.
 
 I included all of the HTML5, javascript, and CSS in one single HTML file "index.html".
 
