@@ -20,7 +20,7 @@ I decided to use the Javascript Canvas method after being inspired by this parti
 #### Design challenges and choices
 The first challenge of the project involved making the trails of the particles. It was important that they fade gradually over time. I discovered the "getimagedata" function, that obtains the rgba values of each pixel of the canvas in an array. I wrote the following code that subtracts 1 from the alpha channel of every pixel, and then prints the modified data onto the canvas. I also created 3 separate canvases (one each for the trails, particles and background) to prevent the background and particles from becoming transparent.
 
-```
+```javascript
                 const imageData = contextTrail.getImageData(0, 0, canvas.width, canvas.height);
                 const data = imageData.data;
                 for (var i = 0; i < data.length; i += 4) {
@@ -30,14 +30,14 @@ The first challenge of the project involved making the trails of the particles. 
 ```
 I also used the "getImageData" method to control the behavior of the particles. For each particle, I looked at specific pixels to the left and right of the particle at an angle and an offset distance, and summed the total RGB values of each side to get a measure of the strength of the "signal". If one "signal" is stronger than the other, the particle will rotate towards it.
 
-```
+```javascript
                                 signalStrengthR += dataR[j] + dataR[j + 1] + dataR[j + 2] + dataR[j + 3];
                                 signalStrengthL += dataL[j] + dataL[j + 1] + dataL[j + 2] + dataL[j + 3];
 ```
 
 Another challenge involved adding multiple species of slime. At first, I considered making a seperate array of new particles, and duplicating code in order to handle the new species. However, I realised a simpler way was to use a modulo operator to ensure there were always equal particles of each species. I then modified the behavior to turn towards particles of its own color, and away from those of other colors. This meant that I could not change the colors of the trails with more than one species present.
 
-```
+```javascript
                             else if (numberSpecies == 2) {
                                 if (i % 2 == 0) {
                                     signalStrengthR += dataR[j] - dataR[j + 1] + dataR[j + 2] + dataR[j + 3];
