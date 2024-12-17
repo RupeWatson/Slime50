@@ -9,6 +9,9 @@ My web application was created to simulate the motion of a slime mould in a 2d s
 
 I decided to use the Javascript Canvas method after being inspired by this particle simulation https://physics.weber.edu/schroeder/md/. 
 
+Simulation Images: <br>
+|<img src="/demo1.png" width="300">|<img src="/demo3.png" width="300">|<img src="/demo4.png" width="300">|
+
 #### Simulation features
 - Ability to start, stop, and reset the simulation using buttons.
 - Ability to change the number of particles in the simulation using a slider from 1 to 5000.
