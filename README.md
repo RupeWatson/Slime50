@@ -1,4 +1,4 @@
-# Slime50
+# Slime Mold Particle Simulation
 #### Video Demo:  https://www.youtube.com/watch?v=jTOeH1Tb81U
 #### Introduction
 My project is a web application which can be accessed here: https://rupertwatson.github.io/Slime50/.
